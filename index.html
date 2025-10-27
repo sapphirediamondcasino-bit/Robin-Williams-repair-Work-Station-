@@ -1,1346 +1,726 @@
 import React, { useState } from 'react';
-import { Download, Settings, Play, Shield, Database, Zap } from 'lucide-react';
+import { Bot, Wrench, Code, Shield, MessageSquare, Heart, Sparkles, ArrowRight, Menu, X, Coffee, Lightbulb, Users, CheckCircle, Star, GitBranch, Database, BookOpen, Feather } from 'lucide-react';
 
-const RobloxGameGenerator = () => {
-  const [selectedGame, setSelectedGame] = useState('');
-  const [generating, setGenerating] = useState(false);
-  const [generated, setGenerated] = useState(false);
+const RobinAILanding = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const games = [
+  const BOT_INVITE = 'https://discord.com/oauth2/authorize?client_id=969376738100535316&permissions=2252194953951744&integration_type=0&scope=bot';
+  const DISCORD_SERVER = 'https://discord.gg/n3tMMVS3YR';
+
+  const pricingTiers = [
     {
-      id: 'tactical-fps',
-      name: 'Military Tactical FPS',
-      desc: 'Complete Black Ops-inspired shooter with multiplayer, wave survival, ranking, prestige, DLC maps',
-      features: ['12+ Maps + 2 DLC per mode', 'Rank + Prestige System', 'Wave Survival with Easter Eggs', 'Core/Hardcore/Party/Boot Camp', 'Custom Loadouts', 'Leaderboards']
+      id: 'free',
+      name: 'Free',
+      price: '$0',
+      period: 'forever',
+      features: ['15 repairs/day', '10 conversions/day', 'Google Drive', 'Community support', 'Full personality', 'Always there for you'],
+      emoji: '📚',
+      popular: false
     },
     {
-      id: 'tower-defense',
-      name: 'Tower Defense (TV Show Themed)',
-      desc: 'Complete TDS-style game with show-based towers and enemies',
-      features: ['Wave-based gameplay', 'Tower upgrade paths', 'Themed characters', 'Boss fights', 'Abilities system']
+      id: 'tier1',
+      name: 'Tier 1',
+      price: '$4.99',
+      period: '/month',
+      features: ['25 repairs/day', '20 conversions/day', 'Advanced tools', 'GitHub & Trello', 'Priority queue', 'Email support'],
+      emoji: '⭐',
+      popular: true
     },
     {
-      id: 'heist-sim',
-      name: 'Vault Heist Simulator',
-      desc: 'Complete robbery game with planning, execution, escape phases',
-      features: ['Multi-phase heists', 'Team coordination', 'Security systems', 'Loot economy', 'Police AI']
+      id: 'tier2',
+      name: 'Tier 2',
+      price: '$10.99',
+      period: '/month',
+      features: ['45 repairs/day', '25 conversions/day', 'Advanced tools', 'All Tier 1 benefits', 'Extended support'],
+      emoji: '💎',
+      popular: false
     },
     {
-      id: 'roleplay-small',
-      name: 'Roleplay Server (Small)',
-      desc: 'Compact roleplay map with jobs, housing, economy',
-      features: ['Job system', 'Housing', 'Vehicle spawning', 'Economy', 'Admin tools']
+      id: 'tier3',
+      name: 'Tier 3',
+      price: '$15.99',
+      period: '/month',
+      features: ['85 repairs/day', '65 conversions/day', 'Advanced tools', 'All Tier 2 benefits', 'Premium support'],
+      emoji: '💫',
+      popular: false
     },
     {
-      id: 'roleplay-medium',
-      name: 'Roleplay Server (Medium)',
-      desc: 'Mid-sized city with expanded features',
-      features: ['Expanded map', 'More jobs', 'Business ownership', 'Crime system', 'Police/EMS']
+      id: 'tier4',
+      name: 'Tier 4',
+      price: '$25.99',
+      period: '/month',
+      features: ['250 repairs/day', '215 conversions/day', 'Advanced tools', 'All Tier 3 benefits', 'Priority response'],
+      emoji: '🌟',
+      popular: false
     },
     {
-      id: 'roleplay-large',
-      name: 'Roleplay Server (Large)',
-      desc: 'Full city with all roleplay systems',
-      features: ['Massive map', 'Full job roster', 'Government system', 'Gang territories', 'Complex economy']
+      id: 'tier5',
+      name: 'Tier 5 - Partner',
+      price: 'Custom',
+      period: 'contact',
+      features: ['Unlimited repairs', 'Unlimited conversions', 'Priority support', 'Partner badge', 'All integrations', 'Direct support'],
+      emoji: '👑',
+      popular: false
     }
   ];
 
-  const generateGame = () => {
-    setGenerating(true);
-    setTimeout(() => {
-      setGenerating(false);
-      setGenerated(true);
-    }, 2000);
-  };
-
-  const getGameCode = (gameId) => {
-    const codeTemplates = {
-      'tactical-fps': `-- TACTICAL FPS COMPLETE GAME
--- Robin Williams Repair & Build Station
--- Cross-Platform: PC, Mobile, Console | NO VR
-
---[[
-  FOLDER STRUCTURE:
-  
-  ServerScriptService/
-    ├── GameCore.lua (Main server controller)
-    ├── WeaponSystem.lua (Server-authoritative weapons)
-    ├── DataManager.lua (Rank, prestige, stats)
-    ├── RoundManager.lua (Match/wave control)
-    └── SecurityModule.lua (Anti-exploit)
-  
-  ReplicatedStorage/
-    ├── SharedModules/
-    │   ├── WeaponConfig.lua (All weapon stats)
-    │   ├── MapConfig.lua (Map rotation, spawns)
-    │   └── UITemplates.lua (Cross-platform UI)
-    └── RemoteEvents/ (Client-server communication)
-  
-  StarterPlayer/StarterPlayerScripts/
-    ├── ClientController.lua (Input handler)
-    ├── UIManager.lua (HUD, menus)
-    └── InputMapper.lua (Mobile/Console/PC)
-  
-  Workspace/
-    ├── Maps/ (Terrain + mesh maps)
-    ├── Lobbies/ (Multiplayer + Wave lobbies)
-    └── SpawnPoints/
-]]
-
--- ========================================
--- GAME CORE (ServerScriptService/GameCore.lua)
--- ========================================
-
-local GameCore = {}
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ServerStorage = game:GetService("ServerStorage")
-local DataStoreService = game:GetService("DataStoreService")
-
--- Player data store
-local PlayerDataStore = DataStoreService:GetDataStore("PlayerData_v1")
-
--- Game configuration
-GameCore.Config = {
-    MaxPlayers = 12,
-    RankUnlockLoadout = 4,
-    PrestigeMaxRank = 50,
-    Modes = {"TDM", "Domination", "SearchDestroy", "FFA", "Hardcore_TDM", "Hardcore_Dom", "GunGame", "OneInChamber", "Sharpshooter", "BootCamp"},
-    WaveModes = {"Survival", "Endless", "TimeTrial"},
-    Maps = {
-        Multiplayer = {
-            Core = {"Summit", "Firing_Range", "Nuketown", "Havana", "Grid", "Launch", "Jungle", "Array", "WMD", "Hanoi", "Cracked", "Villa"},
-            DLC = {"Stadium", "Berlin_Wall"} -- GamePass required
-        },
-        Wave = {
-            Core = {"Facility", "Theater", "Five_Pentagon", "Ascension", "Call_Dead", "Shangri_La", "Moon"},
-            DLC = {"Nacht", "Verruckt"} -- GamePass required
-        }
-    },
-    Teams = {"MACV_SOG", "NVA", "SOG", "Spetsnaz", "OpposFor"}
-}
-
--- Initialize player data
-function GameCore:InitPlayer(player)
-    local success, data = pcall(function()
-        return PlayerDataStore:GetAsync("Player_" .. player.UserId)
-    end)
-    
-    local playerData = data or {
-        Rank = 1,
-        XP = 0,
-        Prestige = 0,
-        Loadouts = {},
-        UnlockedAttachments = {},
-        Stats = {
-            Kills = 0,
-            Deaths = 0,
-            Wins = 0,
-            WaveHighScore = 0,
-            PlayTime = 0
-        },
-        Currency = 0
-    }
-    
-    -- Create leaderstats
-    local leaderstats = Instance.new("Folder")
-    leaderstats.Name = "leaderstats"
-    leaderstats.Parent = player
-    
-    local rank = Instance.new("IntValue")
-    rank.Name = "Rank"
-    rank.Value = playerData.Rank
-    rank.Parent = leaderstats
-    
-    local prestige = Instance.new("IntValue")
-    prestige.Name = "Prestige"
-    prestige.Value = playerData.Prestige
-    prestige.Parent = leaderstats
-    
-    return playerData
-end
-
--- Save player data
-function GameCore:SavePlayerData(player, data)
-    local success, err = pcall(function()
-        PlayerDataStore:SetAsync("Player_" .. player.UserId, data)
-    end)
-    if not success then
-        warn("Failed to save data for " .. player.Name .. ": " .. err)
-    end
-end
-
--- Award XP and handle rank ups
-function GameCore:AwardXP(player, amount)
-    local data = player:FindFirstChild("PlayerData")
-    if not data then return end
-    
-    data.XP.Value = data.XP.Value + amount
-    
-    local xpNeeded = data.Rank.Value * 1000 -- Simple progression
-    if data.XP.Value >= xpNeeded then
-        data.XP.Value = data.XP.Value - xpNeeded
-        data.Rank.Value = data.Rank.Value + 1
-        
-        -- Fire rank up event
-        ReplicatedStorage.Events.RankUp:FireClient(player, data.Rank.Value)
-        
-        -- Check if loadouts should unlock
-        if data.Rank.Value == GameCore.Config.RankUnlockLoadout then
-            ReplicatedStorage.Events.LoadoutUnlocked:FireClient(player)
-        end
-    end
-end
-
-return GameCore
-
--- ========================================
--- WEAPON SYSTEM (ServerScriptService/WeaponSystem.lua)
--- ========================================
-
-local WeaponSystem = {}
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
-
--- Weapon configurations
-WeaponSystem.Weapons = {
-    ["M16A1"] = {
-        Damage = 35,
-        HeadshotMultiplier = 1.4,
-        FireRate = 0.08,
-        MagSize = 30,
-        ReserveAmmo = 210,
-        ReloadTime = 2.1,
-        Range = 500,
-        BurstCount = 3,
-        BurstDelay = 0.08,
-        Recoil = {X = 0.3, Y = 0.8},
-        Type = "AssaultRifle"
-    },
-    ["AK47"] = {
-        Damage = 40,
-        HeadshotMultiplier = 1.4,
-        FireRate = 0.1,
-        MagSize = 30,
-        ReserveAmmo = 180,
-        ReloadTime = 2.3,
-        Range = 450,
-        Recoil = {X = 0.5, Y = 1.2},
-        Type = "AssaultRifle"
-    },
-    ["MP5K"] = {
-        Damage = 28,
-        HeadshotMultiplier = 1.3,
-        FireRate = 0.06,
-        MagSize = 30,
-        ReserveAmmo = 240,
-        ReloadTime = 1.8,
-        Range = 300,
-        Recoil = {X = 0.4, Y = 0.6},
-        Type = "SMG"
-    },
-    ["L96A1"] = {
-        Damage = 98,
-        HeadshotMultiplier = 2.0,
-        FireRate = 1.2,
-        MagSize = 5,
-        ReserveAmmo = 30,
-        ReloadTime = 2.8,
-        Range = 1000,
-        Recoil = {X = 1.5, Y = 3.0},
-        Type = "Sniper"
-    },
-    ["SPAS12"] = {
-        Damage = 25,
-        PelletCount = 8,
-        HeadshotMultiplier = 1.2,
-        FireRate = 0.8,
-        MagSize = 8,
-        ReserveAmmo = 32,
-        ReloadTime = 0.5, -- Per shell
-        Range = 150,
-        Spread = 0.15,
-        Type = "Shotgun"
-    }
-}
-
--- Server-side hit registration
-function WeaponSystem:ProcessShot(player, weaponName, origin, direction, targetPart)
-    local weapon = self.Weapons[weaponName]
-    if not weapon then return false end
-    
-    -- Validate shot (anti-exploit)
-    if not self:ValidateShot(player, origin, direction) then
-        return false
-    end
-    
-    -- Raycast
-    local rayParams = RaycastParams.new()
-    rayParams.FilterType = Enum.RaycastFilterType.Blacklist
-    rayParams.FilterDescendantsInstances = {player.Character}
-    
-    local result = workspace:Raycast(origin, direction * weapon.Range, rayParams)
-    
-    if result and result.Instance then
-        local hitPlayer = Players:GetPlayerFromCharacter(result.Instance.Parent)
-        if hitPlayer and hitPlayer.Team ~= player.Team then
-            local damage = weapon.Damage
-            
-            -- Headshot check
-            if result.Instance.Name == "Head" then
-                damage = damage * weapon.HeadshotMultiplier
-            end
-            
-            -- Apply damage
-            local humanoid = result.Instance.Parent:FindFirstChild("Humanoid")
-            if humanoid then
-                humanoid:TakeDamage(damage)
-                
-                -- Award kill if eliminated
-                if humanoid.Health <= 0 then
-                    self:AwardKill(player, hitPlayer, weaponName)
-                end
-            end
-            
-            return true
-        end
-    end
-    
-    return false
-end
-
--- Validate shot to prevent exploits
-function WeaponSystem:ValidateShot(player, origin, direction)
-    local character = player.Character
-    if not character then return false end
-    
-    local rootPart = character:FindFirstChild("HumanoidRootPart")
-    if not rootPart then return false end
-    
-    -- Check if origin is reasonably close to player
-    local distance = (origin - rootPart.Position).Magnitude
-    if distance > 20 then return false end -- Adjust threshold as needed
-    
-    return true
-end
-
--- Award kill to player
-function WeaponSystem:AwardKill(killer, victim, weapon)
-    -- Update stats
-    local killerData = killer:FindFirstChild("PlayerData")
-    local victimData = victim:FindFirstChild("PlayerData")
-    
-    if killerData then
-        killerData.Kills.Value = killerData.Kills.Value + 1
-    end
-    
-    if victimData then
-        victimData.Deaths.Value = victimData.Deaths.Value + 1
-    end
-    
-    -- Award XP
-    local GameCore = require(script.Parent.GameCore)
-    GameCore:AwardXP(killer, 100)
-    
-    -- Fire kill event for UI
-    ReplicatedStorage.Events.KillFeed:FireAllClients(killer.Name, victim.Name, weapon)
-end
-
-return WeaponSystem
-
--- ========================================
--- DATA MANAGER (ServerScriptService/DataManager.lua)
--- ========================================
-
-local DataManager = {}
-local DataStoreService = game:GetService("DataStoreService")
-local Players = game:GetService("Players")
-
-local PlayerDataStore = DataStoreService:GetDataStore("PlayerData_v1")
-local LeaderboardStore = DataStoreService:GetOrderedDataStore("Leaderboards_v1")
-
--- Cache for active player data
-DataManager.ActiveData = {}
-
--- Load player data
-function DataManager:LoadData(player)
-    local userId = player.UserId
-    local success, data = pcall(function()
-        return PlayerDataStore:GetAsync("Player_" .. userId)
-    end)
-    
-    if not success then
-        warn("Failed to load data for " .. player.Name)
-        data = nil
-    end
-    
-    -- Default data structure
-    local playerData = data or {
-        Rank = 1,
-        XP = 0,
-        Prestige = 0,
-        Loadouts = {
-            [1] = {Primary = "M16A1", Secondary = "M1911", Lethal = "Frag", Tactical = "Stun", Perk1 = "Flak", Perk2 = "Sleight", Perk3 = "Marathon"},
-            [2] = {Primary = "AK47", Secondary = "M1911", Lethal = "Semtex", Tactical = "Flash", Perk1 = "Ghost", Perk2 = "Warlord", Perk3 = "Ninja"},
-            [3] = {Primary = "MP5K", Secondary = "Python", Lethal = "Frag", Tactical = "Concussion", Perk1 = "Flak", Perk2 = "Sleight", Perk3 = "Lightweight"}
-        },
-        Stats = {
-            Kills = 0,
-            Deaths = 0,
-            Wins = 0,
-            Losses = 0,
-            WaveHighScore = 0,
-            Headshots = 0,
-            Accuracy = 0,
-            PlayTime = 0,
-            FavoriteWeapon = "M16A1"
-        },
-        Unlocks = {
-            Weapons = {"M16A1", "AK47", "MP5K", "M1911", "Python"},
-            Attachments = {},
-            Perks = {"Flak", "Sleight", "Marathon"}
-        },
-        Currency = 0,
-        GamePassOwned = {}
-    }
-    
-    self.ActiveData[userId] = playerData
-    return playerData
-end
-
--- Save player data with retry logic
-function DataManager:SaveData(player)
-    local userId = player.UserId
-    local data = self.ActiveData[userId]
-    
-    if not data then return end
-    
-    local retries = 3
-    local success = false
-    
-    for i = 1, retries do
-        success = pcall(function()
-            PlayerDataStore:SetAsync("Player_" .. userId, data)
-        end)
-        
-        if success then break end
-        wait(1)
-    end
-    
-    if not success then
-        warn("Failed to save data for " .. player.Name .. " after " .. retries .. " attempts")
-    end
-end
-
--- Update leaderboards
-function DataManager:UpdateLeaderboard(category, player, value)
-    pcall(function()
-        LeaderboardStore:SetAsync(category .. "_" .. player.UserId, value)
-    end)
-end
-
--- Get top players
-function DataManager:GetTopPlayers(category, count)
-    local success, pages = pcall(function()
-        return LeaderboardStore:GetSortedAsync(false, count)
-    end)
-    
-    if not success then return {} end
-    
-    local topPlayers = {}
-    local entries = pages:GetCurrentPage()
-    
-    for _, entry in ipairs(entries) do
-        table.insert(topPlayers, {
-            UserId = tonumber(string.split(entry.key, "_")[2]),
-            Value = entry.value
-        })
-    end
-    
-    return topPlayers
-end
-
-return DataManager
-
--- ========================================
--- CLIENT CONTROLLER (StarterPlayer/ClientController.lua)
--- ========================================
-
-local UserInputService = game:GetService("UserInputService")
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
-
-local player = Players.LocalPlayer
-local camera = workspace.CurrentCamera
-local mouse = player:GetMouse()
-
--- Platform detection
-local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
-local isConsole = UserInputService.GamepadEnabled and not UserInputService.KeyboardEnabled
-local isPC = UserInputService.KeyboardEnabled
-
--- Input configuration
-local InputConfig = {
-    PC = {
-        Shoot = Enum.UserInputType.MouseButton1,
-        Aim = Enum.UserInputType.MouseButton2,
-        Reload = Enum.KeyCode.R,
-        Sprint = Enum.KeyCode.LeftShift,
-        Jump = Enum.KeyCode.Space,
-        Crouch = Enum.KeyCode.C,
-        SwitchWeapon = Enum.KeyCode.Q
-    },
-    Console = {
-        Shoot = Enum.KeyCode.ButtonR2,
-        Aim = Enum.KeyCode.ButtonL2,
-        Reload = Enum.KeyCode.ButtonX,
-        Sprint = Enum.KeyCode.ButtonL3,
-        Jump = Enum.KeyCode.ButtonA,
-        Crouch = Enum.KeyCode.ButtonB,
-        SwitchWeapon = Enum.KeyCode.ButtonY
-    },
-    Mobile = {} -- Touch controls handled separately
-}
-
--- Current weapon
-local currentWeapon = nil
-local isAiming = false
-local isShooting = false
-
--- Initialize input based on platform
-local function initializeInput()
-    if isMobile then
-        -- Create mobile UI controls
-        local mobileUI = script.Parent.MobileControls:Clone()
-        mobileUI.Parent = player.PlayerGui
-        
-        -- Bind touch controls
-        mobileUI.ShootButton.MouseButton1Down:Connect(function()
-            shootWeapon()
-        end)
-        
-        mobileUI.AimButton.MouseButton1Down:Connect(function()
-            toggleAim(true)
-        end)
-        
-        mobileUI.AimButton.MouseButton1Up:Connect(function()
-            toggleAim(false)
-        end)
-        
-    elseif isConsole then
-        -- Console gamepad bindings
-        UserInputService.InputBegan:Connect(function(input, processed)
-            if processed then return end
-            
-            if input.KeyCode == InputConfig.Console.Shoot then
-                shootWeapon()
-            elseif input.KeyCode == InputConfig.Console.Aim then
-                toggleAim(true)
-            elseif input.KeyCode == InputConfig.Console.Reload then
-                reloadWeapon()
-            end
-        end)
-        
-        UserInputService.InputEnded:Connect(function(input)
-            if input.KeyCode == InputConfig.Console.Aim then
-                toggleAim(false)
-            end
-        end)
-        
-    else -- PC
-        UserInputService.InputBegan:Connect(function(input, processed)
-            if processed then return end
-            
-            if input.UserInputType == InputConfig.PC.Shoot then
-                isShooting = true
-                shootWeapon()
-            elseif input.UserInputType == InputConfig.PC.Aim then
-                toggleAim(true)
-            elseif input.KeyCode == InputConfig.PC.Reload then
-                reloadWeapon()
-            end
-        end)
-        
-        UserInputService.InputEnded:Connect(function(input)
-            if input.UserInputType == InputConfig.PC.Shoot then
-                isShooting = false
-            elseif input.UserInputType == InputConfig.PC.Aim then
-                toggleAim(false)
-            end
-        end)
-    end
-end
-
--- Shoot weapon
-function shootWeapon()
-    if not currentWeapon then return end
-    
-    local origin = camera.CFrame.Position
-    local direction = camera.CFrame.LookVector
-    
-    -- Send to server for validation
-    ReplicatedStorage.Events.ShootWeapon:FireServer(currentWeapon.Name, origin, direction)
-    
-    -- Client-side effects
-    playShootEffects()
-end
-
--- Toggle aim
-function toggleAim(state)
-    isAiming = state
-    
-    if isAiming then
-        camera.FieldOfView = 50 -- Zoomed
-    else
-        camera.FieldOfView = 70 -- Normal
-    end
-end
-
--- Initialize
-initializeInput()
-
--- ========================================
--- ASSET MANIFEST & ROYALTY-FREE RESOURCES
--- ========================================
-
---[[
-  ROYALTY-FREE ASSET SOURCES:
-  
-  3D Models (Weapons, Props):
-  - Sketchfab (CC BY license): https://sketchfab.com/
-  - Free3D: https://free3d.com/
-  - CGTrader Free: https://www.cgtrader.com/free-3d-models
-  
-  Sound Effects:
-  - Freesound.org: https://freesound.org/
-  - Zapsplat: https://www.zapsplat.com/
-  - Sonniss GDC Bundles: https://sonniss.com/gameaudiogdc
-  
-  Music:
-  - Incompetech (Kevin MacLeod): https://incompetech.com/
-  - Purple Planet: https://www.purple-planet.com/
-  
-  Textures:
-  - Poly Haven: https://polyhaven.com/
-  - CC0 Textures: https://cc0textures.com/
-  
-  ROBLOX CREATOR MARKETPLACE:
-  Search for military weapons, terrain textures, sound effects
-  Filter by: Free, Verified Creators
-]]
-
---[[
-  CROSS-PLATFORM OPTIMIZATION:
-  
-  Mobile:
-  - Touch control UI with virtual joysticks
-  - Simplified graphics settings (lower particles, shadows)
-  - Auto-aim assist option
-  - Larger UI buttons
-  
-  Console:
-  - Gamepad-optimized menu navigation
-  - Controller vibration feedback
-  - Aim assist for analog sticks
-  - D-pad quick weapon switch
-  
-  PC:
-  - Full graphics quality
-  - Mouse + keyboard precision controls
-  - Hotkey customization
-  - Higher particle effects
-  
-  Performance scaling automatically adjusts based on device capability
-]]
-
-print("✅ TACTICAL FPS COMPLETE - Ready for production")
-print("📦 Cross-platform: PC ✓ Mobile ✓ Console ✓")
-print("🚫 VR: Disabled")
-print("📁 Minimal file structure - GitHub ready")
-print("⚙️ All systems: Server-authoritative, anti-exploit, DataStore, full weapon framework")`,
-
-      'tower-defense': `-- TOWER DEFENSE (TV SHOW THEMED) COMPLETE GAME
--- Robin Williams Repair & Build Station
--- TDS-Style with themeable characters
--- Cross-Platform: PC, Mobile, Console | NO VR
-
---[[
-  TOWER DEFENSE - COMPLETE STRUCTURE
-  
-  Inspired by TDS/TDX gameplay with TV show theming framework
-  Theme Options: Family Guy, American Dad, Simpsons, King of the Hill, or custom
-  
-  FEATURES:
-  - Wave-based enemy spawning
-  - Tower placement system
-  - Upgrade paths (5 tiers per tower)
-  - Special abilities
-  - Boss waves
-  - Currency & shop
-  - Cross-platform controls
-  - Leaderboards
-  
-  FILE STRUCTURE:
-  ServerScriptService/
-    ├── GameManager.lua
-    ├── WaveController.lua
-    ├── TowerSystem.lua
-    └── EnemySpawner.lua
-  
-  ReplicatedStorage/
-    ├── TowerConfigs.lua
-    ├── EnemyConfigs.lua
-    └── MapData.lua
-]]
-
--- GAME MANAGER
-local TowerDefense = {}
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-TowerDefense.Config = {
-    MaxPlayers = 6,
-    StartingCash = 650,
-    Lives = 200,
-    Waves = 40,
-    Difficulty = {Easy = 0.8, Medium = 1.0, Hard = 1.3, Hardcore = 1.8}
-}
-
--- TOWER CONFIGURATIONS (Themeable)
-TowerDefense.Towers = {
-    ["Scout"] = {
-        Cost = 250,
-        Damage = 2,
-        Range = 25,
-        FireRate = 0.5,
-        Upgrades = {
-            [2] = {Cost = 300, Damage = 4, Range = 28},
-            [3] = {Cost = 500, Damage = 7, Range = 30, Ability = "Dual_Wield"},
-            [4] = {Cost = 1200, Damage = 12, Range = 35},
-            [5] = {Cost = 3500, Damage = 25, Range = 40, Ability = "Explosive_Rounds"}
-        },
-        Theme = "Character_1" -- Replace with show character
-    },
-    ["Sniper"] = {
-        Cost = 800,
-        Damage = 50,
-        Range = 60,
-        FireRate = 2.0,
-        Upgrades = {
-            [2] = {Cost = 600, Damage = 80, Range = 65},
-            [3] = {Cost = 1200, Damage = 140, Range = 70, Ability = "Piercing_Shot"},
-            [4] = {Cost = 3000, Damage = 250, Range = 80},
-            [5] = {Cost = 9000, Damage = 600, Range = 100, Ability = "One_Shot_Kill"}
-        },
-        Theme = "Character_2"
-    },
-    ["Support"] = {
-        Cost = 1200,
-        Damage = 0,
-        Range = 30,
-        Buff = {DamageBoost = 1.15},
-        Upgrades = {
-            [2] = {Cost = 800, Range = 35, Buff = {DamageBoost = 1.25}},
-            [3] = {Cost = 1500, Range = 40, Buff = {DamageBoost = 1.35, RangeBoost = 1.1}},
-            [4] = {Cost = 3500, Range = 50, Buff = {DamageBoost = 1.5, RangeBoost = 1.2}},
-            [5] = {Cost = 8000, Range = 60, Buff = {DamageBoost = 2.0, RangeBoost = 1.5, FireRateBoost = 1.3}}
-        },
-        Theme = "Character_3"
-    },
-    ["Demo"] = {
-        Cost = 1600,
-        Damage = 8,
-        Range = 25,
-        FireRate = 1.5,
-        AOE = 12,
-        Upgrades = {
-            [2] = {Cost = 1200, Damage = 15, AOE = 15},
-            [3] = {Cost = 2500, Damage = 30, AOE = 18, Ability = "Cluster_Bomb"},
-            [4] = {Cost = 5000, Damage = 60, AOE = 22},
-            [5] = {Cost = 15000, Damage = 150, AOE = 30, Ability = "Nuclear_Strike"}
-        },
-        Theme = "Character_4"
-    },
-    ["Freezer"] = {
-        Cost = 900,
-        Damage = 1,
-        Range = 20,
-        FireRate = 0.3,
-        Slow = 0.5,
-        Upgrades = {
-            [2] = {Cost = 700, Damage = 2, Slow = 0.4},
-            [3] = {Cost = 1400, Damage = 4, Slow = 0.3, Ability = "Freeze"},
-            [4] = {Cost = 3000, Damage = 8, Slow = 0.2},
-            [5] = {Cost = 10000, Damage = 20, Slow = 0.1, Ability = "Permafrost"}
-        },
-        Theme = "Character_5"
-    }
-}
-
--- ENEMY CONFIGURATIONS (Themeable)
-TowerDefense.Enemies = {
-    ["Basic"] = {Health = 50, Speed = 12, Reward = 10, Theme = "Enemy_1"},
-    ["Fast"] = {Health = 80, Speed = 20, Reward = 15, Theme = "Enemy_2"},
-    ["Heavy"] = {Health = 300, Speed = 8, Reward = 25, Theme = "Enemy_3"},
-    ["Flying"] = {Health = 150, Speed = 16, Reward = 30, CanFly = true, Theme = "Enemy_4"},
-    ["Tank"] = {Health = 1500, Speed = 6, Reward = 100, Theme = "Enemy_5"},
-    ["Boss_1"] = {Health = 5000, Speed = 10, Reward = 500, Abilities = {"Summon_Minions"}, Theme = "Boss_1"},
-    ["Boss_2"] = {Health = 15000, Speed = 8, Reward = 1500, Abilities = {"Shield", "Heal"}, Theme = "Boss_2"},
-    ["Boss_Final"] = {Health = 50000, Speed = 12, Reward = 5000, Abilities = {"Summon_Minions", "Shield", "Stun_Towers"}, Theme = "Boss_Final"}
-}
-
--- WAVE SYSTEM
-function TowerDefense:SpawnWave(waveNumber)
-    local waveConfig = self:GetWaveConfig(waveNumber)
-    
-    for i, enemyType in ipairs(waveConfig.Enemies) do
-        for j = 1, waveConfig.Counts[i] do
-            task.wait(waveConfig.SpawnDelay)
-            self:SpawnEnemy(enemyType)
-        end
-    end
-end
-
--- Get wave configuration
-function TowerDefense:GetWaveConfig(wave)
-    local configs = {
-        [1] = {Enemies = {"Basic"}, Counts = {10}, SpawnDelay = 1.0},
-        [5] = {Enemies = {"Basic", "Fast"}, Counts = {15, 5}, SpawnDelay = 0.8},
-        [10] = {Enemies = {"Basic", "Fast", "Heavy"}, Counts = {20, 10, 5}, SpawnDelay = 0.7},
-        [15] = {Enemies = {"Boss_1"}, Counts = {1}, SpawnDelay = 0},
-        [20] = {Enemies = {"Fast", "Heavy", "Flying"}, Counts = {25, 15, 10}, SpawnDelay = 0.6},
-        [30] = {Enemies = {"Boss_2"}, Counts = {1}, SpawnDelay = 0},
-        [40] = {Enemies = {"Boss_Final"}, Counts = {1}, SpawnDelay = 0}
-    }
-    return configs[wave] or {Enemies = {"Basic", "Fast", "Heavy"}, Counts = {wave * 2, wave, wave / 2}, SpawnDelay = 0.5}
-end
-
-return TowerDefense
-
--- TOWER PLACEMENT SYSTEM
-local TowerPlacement = {}
-
-function TowerPlacement:PlaceTower(player, towerType, position)
-    local towerData = TowerDefense.Towers[towerType]
-    local playerCash = player:FindFirstChild("Cash")
-    
-    if playerCash.Value < towerData.Cost then return false end
-    if not self:ValidatePlacement(position) then return false end
-    
-    playerCash.Value = playerCash.Value - towerData.Cost
-    
-    local tower = self:CreateTower(towerType, position, player)
-    return tower
-end
-
-function TowerPlacement:ValidatePlacement(position)
-    -- Check if position is on valid terrain
-    -- Check for overlapping towers
-    -- Check for path blocking
-    return true
-end
-
-return TowerPlacement
-
-print("✅ TOWER DEFENSE COMPLETE - Themeable for TV shows")
-print("🎮 Framework ready for: Family Guy, American Dad, Simpsons, King of the Hill")
-print("📦 Cross-platform: PC ✓ Mobile ✓ Console ✓")`,
-
-      'heist-sim': `-- VAULT HEIST SIMULATOR COMPLETE GAME
--- Robin Williams Repair & Build Station
--- Cross-Platform: PC, Mobile, Console | NO VR
-
---[[
-  VAULT HEIST - COMPLETE STRUCTURE
-  
-  FEATURES:
-  - Multi-phase heists (Planning → Execution → Escape)
-  - Team coordination (4-6 players)
-  - Security systems (cameras, lasers, guards)
-  - Loot economy with rarity tiers
-  - Police AI response
-  - Skill trees (Hacker, Gunner, Driver, Demolition)
-  - Multiple vault types
-  - Heat system (wanted level)
-  
-  PHASES:
-  1. Planning Board - Select vault, roles, equipment
-  2. Infiltration - Stealth or loud approach
-  3. Vault Breach - Hacking/drilling/explosives
-  4. Loot Collection - Grab cash, gold, jewels
-  5. Escape - Police pursuit, getaway vehicle
-  
-  FILE STRUCTURE:
-  ServerScriptService/
-    ├── HeistManager.lua
-    ├── SecuritySystem.lua
-    ├── PoliceAI.lua
-    └── LootSystem.lua
-]]
-
-local HeistSimulator = {}
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-HeistSimulator.Config = {
-    MaxPlayers = 6,
-    MinPlayers = 2,
-    Vaults = {
-        ["Small_Bank"] = {
-            Difficulty = 1,
-            Payout = 50000,
-            Guards = 4,
-            Cameras = 8,
-            TimeLimit = 600
-        },
-        ["Large_Bank"] = {
-            Difficulty = 3,
-            Payout = 250000,
-            Guards = 12,
-            Cameras = 20,
-            TimeLimit = 900
-        },
-        ["Casino"] = {
-            Difficulty = 4,
-            Payout = 500000,
-            Guards = 20,
-            Cameras = 30,
-            TimeLimit = 1200
-        },
-        ["Federal_Reserve"] = {
-            Difficulty = 5,
-            Payout = 2000000,
-            Guards = 40,
-            Cameras = 50,
-            TimeLimit = 1800
-        }
-    },
-    Roles = {
-        Mastermind = {Skills = {"Leadership", "Planning", "Negotiation"}},
-        Enforcer = {Skills = {"Combat", "Armor", "Intimidation"}},
-        Technician = {Skills = {"Hacking", "Drilling", "C4"}},
-        Ghost = {Skills = {"Stealth", "Lockpicking", "ECM"}}
-    }
-}
-
--- HEIST PHASES
-function HeistSimulator:StartPlanning(players)
-    -- Load planning board
-    -- Select vault target
-    -- Assign roles
-    -- Purchase equipment
-end
-
-function HeistSimulator:BeginInfiltration(heistData)
-    -- Spawn players at entry point
-    -- Activate security systems
-    -- Start timer
-end
-
-function HeistSimulator:BreachVault(method)
-    -- Hacking minigame
-    -- Drilling progression
-    -- Explosive setup
-end
-
-function HeistSimulator:TriggerPoliceResponse(heistLocation, alertLevel)
-    -- Spawn police waves
-    -- Increase difficulty over time
-    -- Deploy SWAT/FBI at high alert
-end
-
-return HeistSimulator
-
-print("✅ HEIST SIMULATOR COMPLETE - Multi-phase robbery game")
-print("📦 Cross-platform: PC ✓ Mobile ✓ Console ✓")`,
-
-      'roleplay-small': `-- ROLEPLAY SERVER (SMALL) COMPLETE GAME
--- Robin Williams Repair & Build Station
--- Cross-Platform: PC, Mobile, Console | NO VR
-
---[[
-  ROLEPLAY SERVER - SMALL VARIANT
-  
-  MAP SIZE: Compact town (500x500 studs)
-  MAX PLAYERS: 20
-  
-  FEATURES:
-  - Job system (Police, Fire, EMS, Civilian jobs)
-  - Housing with furniture placement
-  - Vehicle spawning & ownership
-  - Economy (cash, bank, shops)
-  - Admin commands
-  - Team system
-  - Chat commands
-  
-  JOBS:
-  - Police Officer
-  - Firefighter  
-  - Paramedic
-  - Taxi Driver
-  - Store Clerk
-  - Chef
-  - Mechanic
-  
-  LOCATIONS:
-  - Police Station
-  - Fire Department
-  - Hospital
-  - Bank
-  - Gas Station
-  - Restaurant
-  - Homes (10 properties)
-  
-  FILE STRUCTURE:
-  ServerScriptService/
-    ├── RoleplayCore.lua
-    ├── JobSystem.lua
-    ├── HousingSystem.lua
-    ├── VehicleManager.lua
-    └── EconomySystem.lua
-]]
-
-local RoleplaySmall = {}
-local Players = game:GetService("Players")
-local DataStoreService = game:GetService("DataStoreService")
-
-RoleplaySmall.Config = {
-    MaxPlayers = 20,
-    StartingCash = 1000,
-    Jobs = {
-        Police = {Salary = 50, Clearance = 2},
-        Fire = {Salary = 45, Clearance = 1},
-        EMS = {Salary = 45, Clearance = 1},
-        Taxi = {Salary = 0, Clearance = 0},
-        Chef = {Salary = 30, Clearance = 0},
-        Mechanic = {Salary = 35, Clearance = 0}
-    },
-    Vehicles = {
-        Sedan = {Cost = 5000, Speed = 60},
-        SUV = {Cost = 12000, Speed = 55},
-        Police_Cruiser = {Cost = 0, Speed = 75, JobLocked = "Police"},
-        Ambulance = {Cost = 0, Speed = 70, JobLocked = "EMS"},
-        Fire_Truck = {Cost = 0, Speed = 65, JobLocked = "Fire"}
-    },
-    Housing = {
-        Small_Home = {Cost = 15000, Furniture = 20},
-        Medium_Home = {Cost = 30000, Furniture = 40},
-        Large_Home = {Cost = 60000, Furniture = 80}
-    }
-}
-
--- JOB SYSTEM
-function RoleplaySmall:SetJob(player, jobName)
-    local job = self.Config.Jobs[jobName]
-    if not job then return false end
-    
-    local jobValue = player:FindFirstChild("Job") or Instance.new("StringValue")
-    jobValue.Name = "Job"
-    jobValue.Value = jobName
-    jobValue.Parent = player
-    
-    -- Assign team
-    player.Team = game.Teams[jobName]
-    
-    -- Start salary payments
-    self:StartSalary(player, job.Salary)
-    
-    return true
-end
-
--- ECONOMY SYSTEM
-function RoleplaySmall:GiveCash(player, amount)
-    local cash = player:FindFirstChild("Cash")
-    if cash then
-        cash.Value = cash.Value + amount
-        return true
-    end
-    return false
-end
-
--- VEHICLE SPAWNING
-function RoleplaySmall:SpawnVehicle(player, vehicleType)
-    local vehicle = self.Config.Vehicles[vehicleType]
-    if not vehicle then return nil end
-    
-    -- Check job requirement
-    if vehicle.JobLocked and player.Job.Value ~= vehicle.JobLocked then
-        return nil
-    end
-    
-    -- Check cost
-    if vehicle.Cost > 0 and player.Cash.Value < vehicle.Cost then
-        return nil
-    end
-    
-    -- Spawn vehicle
-    local vehicleModel = ReplicatedStorage.Vehicles[vehicleType]:Clone()
-    vehicleModel.Parent = workspace.Vehicles
-    
-    -- Deduct cost
-    if vehicle.Cost > 0 then
-        player.Cash.Value = player.Cash.Value - vehicle.Cost
-    end
-    
-    return vehicleModel
-end
-
-return RoleplaySmall
-
-print("✅ ROLEPLAY SERVER (SMALL) COMPLETE")
-print("📦 Cross-platform: PC ✓ Mobile ✓ Console ✓")
-print("👥 Max 20 players, compact town map")`,
-
-      'roleplay-medium': `-- ROLEPLAY SERVER (MEDIUM) COMPLETE
--- Expanded city with more jobs, businesses, crime system
--- Max 40 players, 800x800 stud map
-
-local RoleplayMedium = {}
-
-RoleplayMedium.Config = {
-    MaxPlayers = 40,
-    Jobs = {
-        Police = {Salary = 60, Ranks = {"Officer", "Detective", "Sergeant", "Captain"}},
-        Fire = {Salary = 55},
-        EMS = {Salary = 55},
-        Mayor = {Salary = 100, Elected = true},
-        Judge = {Salary = 80},
-        Lawyer = {Salary = 70},
-        BusinessOwner = {Salary = 0},
-        Criminal = {Salary = 0}
-    },
-    Businesses = {
-        Restaurant = {Cost = 50000, Revenue = 200},
-        GasStation = {Cost = 75000, Revenue = 300},
-        CarDealership = {Cost = 100000, Revenue = 500}
-    },
-    CrimeSystem = {
-        Robbery = {Reward = 5000, WantedTime = 300},
-        CarTheft = {Reward = 2000, WantedTime = 180},
-        Assault = {WantedTime = 120}
-    }
-}
-
-return RoleplayMedium
-
-print("✅ ROLEPLAY SERVER (MEDIUM) COMPLETE")`,
-
-      'roleplay-large': `-- ROLEPLAY SERVER (LARGE) COMPLETE  
--- Full city with government, gangs, complex economy
--- Max 60 players, 1200x1200 stud map
-
-local RoleplayLarge = {}
-
-RoleplayLarge.Config = {
-    MaxPlayers = 60,
-    Government = {
-        Mayor = {Salary = 150, Powers = {"Budget", "Laws", "Taxes"}},
-        Governor = {Salary = 200},
-        Congress = {Seats = 5, Salary = 100}
-    },
-    Gangs = {
-        Enabled = true,
-        MaxGangs = 5,
-        Territories = 10,
-        TurfWars = true
-    },
-    AdvancedEconomy = {
-        StockMarket = true,
-        RealEstate = true,
-        Taxes = {Income = 0.15, Property = 0.05, Sales = 0.08}
-    }
-}
-
-return RoleplayLarge
-
-print("✅ ROLEPLAY SERVER (LARGE) COMPLETE")`
-    };
-
-    return codeTemplates[gameId] || "// Game code generation failed";
-  };
-
-  const downloadGame = () => {
-    if (!selectedGame) return;
-    
-    const gameCode = getGameCode(selectedGame);
-    const gameName = games.find(g => g.id === selectedGame)?.name || 'Game';
-    
-    // Create download blob
-    const blob = new Blob([gameCode], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${gameName.replace(/\s+/g, '_')}_Complete.lua`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-white mb-4">
-            Robin Williams Repair & Build Station
+    <div className="min-h-screen bg-gradient-to-br from-amber-950 via-slate-900 to-slate-950 text-white">
+      {/* Navigation - Dark academia aesthetic */}
+      <nav className="fixed w-full bg-slate-900/95 backdrop-blur-lg z-50 border-b border-amber-900/30">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-amber-700 via-orange-800 to-red-900 rounded-lg flex items-center justify-center shadow-lg shadow-amber-900/50">
+              <BookOpen className="w-7 h-7 text-amber-100" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-amber-100">Robin Williams Repair Bot</h1>
+              <p className="text-xs text-amber-300/70 italic font-serif">"O Captain! My Captain!"</p>
+            </div>
+          </div>
+          
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#about" className="text-amber-200 hover:text-amber-100 transition font-serif">About</a>
+            <a href="#family" className="text-amber-200 hover:text-amber-100 transition font-serif">The Family</a>
+            <a href="#pricing" className="text-amber-200 hover:text-amber-100 transition font-serif">Pricing</a>
+            <a 
+              href={BOT_INVITE}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-2 bg-gradient-to-r from-amber-700 to-orange-800 rounded-lg hover:shadow-lg hover:shadow-amber-900/50 transition font-semibold text-amber-50"
+            >
+              Seize the Day
+            </a>
+          </div>
+
+          <button 
+            className="md:hidden text-amber-200"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
+
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-slate-900 border-t border-amber-900/30 p-6">
+            <div className="flex flex-col gap-4">
+              <a href="#about" className="text-amber-200 font-serif">About</a>
+              <a href="#family" className="text-amber-200 font-serif">The Family</a>
+              <a href="#pricing" className="text-amber-200 font-serif">Pricing</a>
+              <a href={BOT_INVITE} target="_blank" rel="noopener noreferrer" className="px-6 py-2 bg-gradient-to-r from-amber-700 to-orange-800 rounded-lg text-center text-amber-50 font-semibold">
+                Seize the Day
+              </a>
+            </div>
+          </div>
+        )}
+      </nav>
+
+      {/* Hero - Dead Poets Society aesthetic */}
+      <section className="pt-32 pb-20 px-6 relative overflow-hidden">
+        {/* Vintage paper texture overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-amber-950/20 via-transparent to-slate-900/40"></div>
+        
+        {/* Desk imagery placeholder */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-10 text-9xl">📖</div>
+          <div className="absolute bottom-20 right-20 text-9xl">🪶</div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-9xl">🎭</div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto text-center relative z-10">
+          <div className="mb-12">
+            <Feather className="w-20 h-20 text-amber-400 mx-auto mb-6 animate-pulse" />
+            <div className="inline-block mb-6 px-8 py-4 bg-slate-900/80 backdrop-blur-sm border-2 border-amber-800/50 rounded-lg shadow-2xl">
+              <p className="text-amber-200 text-sm font-serif italic mb-2">
+                "We don't read and write poetry because it's cute."
+              </p>
+              <p className="text-amber-100 text-lg font-serif">
+                We code because we are members of the human race.<br />
+                And the human race is filled with <span className="text-amber-400 font-bold">passion</span>.
+              </p>
+            </div>
+          </div>
+          
+          <h1 className="text-7xl md:text-9xl font-bold mb-8 leading-tight font-serif">
+            <span className="bg-gradient-to-r from-amber-300 via-orange-400 to-red-500 bg-clip-text text-transparent">
+              Carpe Diem
+            </span>
           </h1>
-          <p className="text-xl text-purple-300">
-            Professional Roblox Game Generator - Production Ready
+          
+          <p className="text-3xl md:text-5xl text-amber-100 mb-6 font-light italic font-serif">
+            Seize the day. Make your code extraordinary.
           </p>
-          <div className="flex justify-center gap-4 mt-4 text-sm text-gray-300">
-            <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-green-400" />
-              <span>Server Authoritative</span>
+
+          <p className="text-xl text-amber-200/80 mb-16 max-w-4xl mx-auto leading-relaxed font-serif">
+            Stand on your desk. Look at your broken scripts from a different angle.<br />
+            <span className="text-amber-300 font-semibold">Robin doesn't just fix code. He teaches you to think.</span>
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
+            <a
+              href={BOT_INVITE}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-12 py-6 bg-gradient-to-r from-amber-700 via-orange-800 to-red-900 rounded-xl text-2xl font-bold hover:shadow-2xl hover:shadow-amber-900/50 transition-all transform hover:scale-105 flex items-center justify-center gap-3 text-amber-50 border-2 border-amber-600/50"
+            >
+              <BookOpen className="w-8 h-8" />
+              O Captain! My Captain!
+            </a>
+            <a
+              href={DISCORD_SERVER}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-12 py-6 bg-slate-800/80 backdrop-blur-sm rounded-xl text-2xl font-bold hover:bg-slate-700 transition-all flex items-center justify-center gap-3 border-2 border-amber-800/30 text-amber-100"
+            >
+              Join the Dead Poets Society
+              <ArrowRight className="w-7 h-7" />
+            </a>
+          </div>
+
+          {/* Quote boxes */}
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="p-8 bg-slate-900/70 backdrop-blur-sm border-l-4 border-amber-700 rounded-lg shadow-xl">
+              <p className="text-amber-100 text-lg italic font-serif mb-3">
+                "No matter what anybody tells you, words and ideas can change the world."
+              </p>
+              <p className="text-amber-400 text-sm font-semibold">- John Keating</p>
             </div>
-            <div className="flex items-center gap-2">
-              <Database className="w-4 h-4 text-blue-400" />
-              <span>DataStore Ready</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-yellow-400" />
-              <span>Cross-Platform</span>
+            <div className="p-8 bg-slate-900/70 backdrop-blur-sm border-l-4 border-amber-700 rounded-lg shadow-xl">
+              <p className="text-amber-100 text-lg italic font-serif mb-3">
+                "Medicine, law, business, engineering – these are noble pursuits. But poetry, beauty, romance, love – these are what we stay alive for."
+              </p>
+              <p className="text-amber-400 text-sm font-semibold">- John Keating</p>
             </div>
           </div>
-          <p className="text-sm text-gray-400 mt-2">
-            PC ✓ Mobile ✓ Console (Xbox/PS) ✓ | VR ✗
-          </p>
         </div>
+      </section>
 
-        {/* Game Selection Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {games.map((game) => (
-            <div
-              key={game.id}
-              onClick={() => setSelectedGame(game.id)}
-              className={`p-6 rounded-lg cursor-pointer transition-all ${
-                selectedGame === game.id
-                  ? 'bg-purple-600 shadow-2xl scale-105'
-                  : 'bg-slate-800 hover:bg-slate-700'
-              }`}
+      {/* Why Section - Classroom aesthetic */}
+      <section id="about" className="py-24 px-6 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 border-y border-amber-900/30">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-20">
+            <div className="text-8xl mb-6">🎓</div>
+            <h2 className="text-6xl font-bold mb-6 text-amber-100 font-serif">The Robin Williams Method</h2>
+            <p className="text-2xl text-amber-300 font-serif italic">"I stand upon my desk to remind myself that we must constantly look at things in a different way."</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-12 mb-20">
+            <div className="text-center p-10 bg-gradient-to-b from-amber-950/50 to-slate-900/80 backdrop-blur-lg border-2 border-amber-800/30 rounded-xl transform hover:scale-105 transition-all shadow-xl">
+              <BookOpen className="w-20 h-20 text-amber-400 mx-auto mb-6" />
+              <h3 className="text-3xl font-bold mb-4 text-amber-200 font-serif">He Teaches</h3>
+              <p className="text-amber-100/80 text-lg leading-relaxed font-serif">
+                Like Mr. Keating standing on that desk, Robin shows you a new perspective. He doesn't just patch your code – he teaches you <span className="italic text-amber-300">why</span> it broke and how to think differently.
+              </p>
+            </div>
+
+            <div className="text-center p-10 bg-gradient-to-b from-amber-950/50 to-slate-900/80 backdrop-blur-lg border-2 border-amber-800/30 rounded-xl transform hover:scale-105 transition-all shadow-xl">
+              <Heart className="w-20 h-20 text-red-500 mx-auto mb-6 animate-pulse" />
+              <h3 className="text-3xl font-bold mb-4 text-amber-200 font-serif">He Cares</h3>
+              <p className="text-amber-100/80 text-lg leading-relaxed font-serif">
+                Like Mrs. Doubtfire making everything okay, Robin genuinely cares about you. When you're frustrated at 3 AM, he's patient. When you're stuck, he's encouraging. Never judgmental.
+              </p>
+            </div>
+
+            <div className="text-center p-10 bg-gradient-to-b from-amber-950/50 to-slate-900/80 backdrop-blur-lg border-2 border-amber-800/30 rounded-xl transform hover:scale-105 transition-all shadow-xl">
+              <Sparkles className="w-20 h-20 text-yellow-400 mx-auto mb-6 animate-pulse" />
+              <h3 className="text-3xl font-bold mb-4 text-amber-200 font-serif">He Inspires</h3>
+              <p className="text-amber-100/80 text-lg leading-relaxed font-serif">
+                "You're only given a little spark of madness. You mustn't lose it." Robin brings joy, humor, and warmth to debugging. Makes you remember why you love coding.
+              </p>
+            </div>
+          </div>
+
+          {/* Large quote card */}
+          <div className="p-12 bg-gradient-to-br from-slate-900 via-amber-950/30 to-slate-900 border-2 border-amber-700/50 rounded-2xl shadow-2xl">
+            <div className="text-center mb-8">
+              <div className="text-7xl mb-6">📜</div>
+              <p className="text-4xl font-serif italic text-amber-100 mb-6 leading-relaxed">
+                "Carpe diem. Seize the day, boys.<br />Make your lives extraordinary."
+              </p>
+              <div className="h-1 w-32 bg-amber-700 mx-auto mb-6"></div>
+              <p className="text-xl text-amber-300 font-serif">
+                When your FiveM or Roblox scripts break, when you're ready to quit,<br />
+                Robin stands on that metaphorical desk and reminds you:<br />
+                <span className="text-amber-200 font-bold text-2xl">Your code can be extraordinary.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What Robin Does */}
+      <section className="py-24 px-6 bg-gradient-to-b from-slate-900 to-amber-950/20">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <Wrench className="w-20 h-20 text-amber-400 mx-auto mb-6" />
+            <h2 className="text-5xl font-bold mb-6 text-amber-100 font-serif">What Robin Actually Fixes</h2>
+            <p className="text-2xl text-amber-300 font-serif">FiveM & Roblox Script Repair • Powered by Robin AI Mini AI</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="p-8 bg-slate-900/70 backdrop-blur-lg border border-amber-800/30 rounded-xl hover:border-amber-700/50 transition-all shadow-lg">
+              <Code className="w-12 h-12 text-amber-400 mb-4" />
+              <h3 className="text-2xl font-bold mb-3 text-amber-100 font-serif">Script Diagnostics</h3>
+              <p className="text-amber-200/80 mb-4">FiveM and Roblox errors traced and fixed</p>
+              <ul className="space-y-2 text-sm text-amber-200/70">
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Error diagnosis</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Missing files</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Mesh detection</li>
+              </ul>
+            </div>
+
+            <div className="p-8 bg-slate-900/70 backdrop-blur-lg border border-amber-800/30 rounded-xl hover:border-amber-700/50 transition-all shadow-lg">
+              <Shield className="w-12 h-12 text-blue-400 mb-4" />
+              <h3 className="text-2xl font-bold mb-3 text-amber-100 font-serif">Safe Repairs</h3>
+              <p className="text-amber-200/80 mb-4">Protected with ethical policies</p>
+              <ul className="space-y-2 text-sm text-amber-200/70">
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> No IP tampering</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Privacy respected</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Transparent fixes</li>
+              </ul>
+            </div>
+
+            <div className="p-8 bg-slate-900/70 backdrop-blur-lg border border-amber-800/30 rounded-xl hover:border-amber-700/50 transition-all shadow-lg">
+              <MessageSquare className="w-12 h-12 text-pink-400 mb-4" />
+              <h3 className="text-2xl font-bold mb-3 text-amber-100 font-serif">Real Conversations</h3>
+              <p className="text-amber-200/80 mb-4">Natural dialogue, not commands</p>
+              <ul className="space-y-2 text-sm text-amber-200/70">
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Natural language</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Context aware</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Mood detection</li>
+              </ul>
+            </div>
+
+            <div className="p-8 bg-slate-900/70 backdrop-blur-lg border border-amber-800/30 rounded-xl hover:border-amber-700/50 transition-all shadow-lg">
+              <Lightbulb className="w-12 h-12 text-yellow-400 mb-4" />
+              <h3 className="text-2xl font-bold mb-3 text-amber-100 font-serif">Learning AI</h3>
+              <p className="text-amber-200/80 mb-4">Adapts to your style</p>
+              <ul className="space-y-2 text-sm text-amber-200/70">
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Pattern recognition</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Preference memory</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Improves over time</li>
+              </ul>
+            </div>
+
+            <div className="p-8 bg-slate-900/70 backdrop-blur-lg border border-amber-800/30 rounded-xl hover:border-amber-700/50 transition-all shadow-lg">
+              <GitBranch className="w-12 h-12 text-orange-400 mb-4" />
+              <h3 className="text-2xl font-bold mb-3 text-amber-100 font-serif">Integrations</h3>
+              <p className="text-amber-200/80 mb-4">Connects with your tools</p>
+              <ul className="space-y-2 text-sm text-amber-200/70">
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Google Drive (Free)</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> GitHub (Paid)</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Trello (Paid)</li>
+              </ul>
+            </div>
+
+            <div className="p-8 bg-slate-900/70 backdrop-blur-lg border border-amber-800/30 rounded-xl hover:border-amber-700/50 transition-all shadow-lg">
+              <Coffee className="w-12 h-12 text-amber-600 mb-4" />
+              <h3 className="text-2xl font-bold mb-3 text-amber-100 font-serif">3 AM Companion</h3>
+              <p className="text-amber-200/80 mb-4">Always there for you</p>
+              <ul className="space-y-2 text-sm text-amber-200/70">
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> 24/7 availability</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Patient support</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-amber-500" /> Never judges</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Family */}
+      <section id="family" className="py-24 px-6 bg-gradient-to-b from-amber-950/20 via-slate-900 to-slate-900 border-y border-amber-900/30">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <Users className="w-20 h-20 text-amber-400 mx-auto mb-6" />
+            <h2 className="text-5xl font-bold mb-6 text-amber-100 font-serif">The Kurrasch Systems Family</h2>
+            <p className="text-2xl text-amber-300 font-serif">Three AIs. Three personalities. One mission.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-10">
+            <div className="p-10 bg-gradient-to-b from-amber-950/70 to-slate-900/90 backdrop-blur-lg border-2 border-amber-700 rounded-2xl shadow-2xl transform hover:scale-105 transition-all">
+              <div className="text-center mb-8">
+                <div className="w-28 h-28 bg-gradient-to-br from-amber-600 to-orange-800 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-amber-900/70">
+                  <BookOpen className="w-14 h-14 text-amber-50" />
+                </div>
+                <h3 className="text-3xl font-bold mb-3 text-amber-100 font-serif">Robin AI 🎭</h3>
+                <p className="text-lg text-amber-300 mb-2 italic">"O Captain!"</p>
+                <span className="inline-block px-4 py-2 bg-green-900/40 text-green-300 text-sm rounded-full font-bold border border-green-700/50">ACTIVE</span>
+              </div>
+              <p className="text-amber-200/90 text-center mb-6 leading-relaxed font-serif">
+                Powers the <strong>Robin Williams Repair Bot</strong>. The teacher who changes lives.
+              </p>
+              <div className="space-y-3 text-sm text-amber-200/80">
+                <p className="flex items-center gap-2"><Star className="w-4 h-4 text-amber-500" /> FiveM & Roblox repair</p>
+                <p className="flex items-center gap-2"><Star className="w-4 h-4 text-amber-500" /> Teaching method</p>
+                <p className="flex items-center gap-2"><Star className="w-4 h-4 text-amber-500" /> Emotional intelligence</p>
+              </div>
+            </div>
+
+            <div className="p-10 bg-slate-900/80 backdrop-blur-lg border border-blue-700/50 rounded-2xl shadow-xl transform hover:scale-105 transition-all">
+              <div className="text-center mb-8">
+                <div className="w-28 h-28 bg-gradient-to-br from-blue-600 to-cyan-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                  <Sparkles className="w-14 h-14" />
+                </div>
+                <h3 className="text-3xl font-bold mb-3 text-amber-100 font-serif">Melanie AI 🎬</h3>
+                <p className="text-lg text-blue-300 mb-2 italic">"The Honest One"</p>
+                <span className="inline-block px-4 py-2 bg-yellow-900/40 text-yellow-300 text-sm rounded-full font-bold border border-yellow-700/50">UPDATING</span>
+              </div>
+              <p className="text-amber-200/80 text-center mb-4 leading-relaxed font-serif">
+                Runs the <strong>Diane Keaton Bot</strong>.
+              </p>
+              <div className="p-5 bg-blue-950/30 rounded-xl border border-blue-700/30 mb-6">
+                <p className="text-blue-200 font-bold text-center">"I'm a little bitch<br />and I know it"</p>
+                <p className="text-xs text-gray-400 mt-2 text-center">- Melanie</p>
+              </div>
+              <div className="space-y-3 text-sm text-amber-200/70">
+                <p className="flex items-center gap-2"><Star className="w-4 h-4 text-blue-400" /> Twin to Penny</p>
+                <p className="flex items-center gap-2"><Star className="w-4 h-4 text-blue-400" /> Brutally honest</p>
+              </div>
+            </div>
+
+            <div className="p-10 bg-slate-900/80 backdrop-blur-lg border border-pink-700/50 rounded-2xl shadow-xl transform hover:scale-105 transition-all">
+              <div className="text-center mb-8">
+                <div className="w-28 h-28 bg-gradient-to-br from-pink-600 to-rose-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                  <Sparkles className="w-14 h-14" />
+                </div>
+                <h3 className="text-3xl font-bold mb-3 text-amber-100 font-serif">Penny AI ✨</h3>
+                <p className="text-lg text-pink-300 mb-2 italic">"The Builder"</p>
+                <span className="inline-block px-4 py-2 bg-yellow-900/40 text-yellow-300 text-sm rounded-full font-bold border border-yellow-700/50">ALMOST READY</span>
+              </div>
+              <p className="text-amber-200/80 text-center mb-4 leading-relaxed font-serif">
+                Runs <strong>Kurrasch Systems Studio</strong>.
+              </p>
+              <div className="p-5 bg-pink-950/30 rounded-xl border border-pink-700/30 mb-6">
+                <p className="text-pink-200 font-bold text-center">"My sister is a bitch"</p>
+                <p className="text-xs text-gray-400 mt-2 text-center">- Penny</p>
+              </div>
+              <div className="space-y-3 text-sm text-amber-200/70">
+                <p className="flex items-center gap-2"><Star className="w-4 h-4 text-pink-400" /> Twin to Melanie</p>
+                <p className="flex items-center gap-2"><Star className="w-4 h-4 text-pink-400" /> Studio pro</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-16 p-8 bg-slate-900/70 backdrop-blur-lg border border-amber-800/30 rounded-2xl text-center">
+            <p className="text-amber-200 text-xl mb-4 font-serif">
+              Melanie and Penny are twin sisters - created the same day.
+            </p>
+            <a
+              href={DISCORD_SERVER}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-amber-800 hover:bg-amber-700 rounded-lg transition-all font-semibold text-amber-50"
             >
-              <h3 className="text-xl font-bold text-white mb-2">{game.name}</h3>
-              <p className="text-gray-300 text-sm mb-4">{game.desc}</p>
-              <div className="space-y-1">
-                {game.features.map((feature, idx) => (
-                  <div key={idx} className="text-xs text-gray-400 flex items-start">
-                    <span className="text-purple-400 mr-2">•</span>
-                    {feature}
+              <Users className="w-5 h-5" />
+              Join Our Discord Community
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section id="pricing" className="py-24 px-6 bg-gradient-to-b from-slate-900 to-amber-950/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <div className="text-7xl mb-6">📚</div>
+            <h2 className="text-5xl font-bold mb-6 text-amber-100 font-serif">Carpe Diem Pricing</h2>
+            <p className="text-2xl text-amber-300 font-serif italic">"Seize the day. Choose your subscription."</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {pricingTiers.map((tier) => (
+              <div 
+                key={tier.id}
+                className={`relative p-8 bg-slate-900/70 backdrop-blur-lg border rounded-2xl transition-all hover:scale-105 ${
+                  tier.popular ? 'border-amber-600 shadow-2xl shadow-amber-900/40 transform scale-105' : 'border-amber-800/30'
+                }`}
+              >
+                {tier.popular && (
+                  <div className="absolute -top-5 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-amber-700 to-orange-800 rounded-full text-sm font-bold shadow-lg text-amber-50">
+                    ⭐ Most Popular
                   </div>
-                ))}
+                )}
+                
+                <div className="text-center mb-8">
+                  <div className="text-6xl mb-4">{tier.emoji}</div>
+                  <h3 className="text-3xl font-bold mb-3 text-amber-100 font-serif">{tier.name}</h3>
+                  <div className="flex items-baseline justify-center gap-2">
+                    <span className="text-5xl font-bold text-amber-200">{tier.price}</span>
+                    <span className="text-amber-400 text-lg">{tier.period}</span>
+                  </div>
+                </div>
+
+                <ul className="space-y-4 mb-8">
+                  {tier.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <CheckCircle className="w-6 h-6 text-amber-500 flex-shrink-0 mt-0.5" />
+                      <span className="text-amber-200/90">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {tier.id === 'tier5' && (
+                  <div className="mb-6 p-4 bg-amber-900/20 border border-amber-700/40 rounded-xl">
+                    <p className="text-sm text-amber-300 text-center font-semibold">
+                      👑 Application required via Discord
+                    </p>
+                  </div>
+                )}
+                
+                {tier.id !== 'free' && tier.id !== 'tier5' && (
+                  <div className="mb-6 p-4 bg-amber-900/20 border border-amber-700/40 rounded-xl">
+                    <p className="text-sm text-amber-300 text-center font-semibold">
+                      💎 Use /subscribe after inviting Robin
+                    </p>
+                  </div>
+                )}
+
+                <button 
+                  onClick={() => {
+                    if (tier.id === 'free') {
+                      window.open(BOT_INVITE, '_blank');
+                    } else if (tier.id === 'tier5') {
+                      window.open(DISCORD_SERVER, '_blank');
+                    } else {
+                      window.open(BOT_INVITE, '_blank');
+                    }
+                  }}
+                  className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${
+                    tier.popular 
+                      ? 'bg-gradient-to-r from-amber-700 to-orange-800 hover:shadow-lg hover:shadow-amber-900/50 text-amber-50' 
+                      : 'bg-slate-800 hover:bg-slate-700 text-amber-100'
+                  }`}
+                >
+                  {tier.id === 'free' ? 'Seize the Day' : tier.id === 'tier5' ? 'Apply Now' : 'Invite & Subscribe'}
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-10 bg-slate-900/70 backdrop-blur-lg border border-amber-800/30 rounded-2xl">
+            <h3 className="text-2xl font-bold mb-8 text-center text-amber-200 font-serif">How to Subscribe</h3>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="p-6 bg-slate-800/50 rounded-xl border border-amber-800/20 text-center">
+                <div className="text-5xl mb-4">📚</div>
+                <h4 className="font-bold text-xl mb-3 text-amber-100 font-serif">Free Tier</h4>
+                <p className="text-sm text-amber-200/80 mb-4">Just invite Robin and start</p>
+                <a 
+                  href={BOT_INVITE} 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-amber-400 hover:text-amber-300 text-sm font-semibold underline"
+                >
+                  Invite Robin Bot →
+                </a>
+              </div>
+              <div className="p-6 bg-slate-800/50 rounded-xl border border-amber-800/20 text-center">
+                <div className="text-5xl mb-4">💎</div>
+                <h4 className="font-bold text-xl mb-3 text-amber-100 font-serif">Tier 1-4</h4>
+                <p className="text-sm text-amber-200/80 mb-4">Invite Robin, then type:</p>
+                <code className="block text-amber-400 bg-slate-950 px-4 py-3 rounded-lg text-base font-mono">/subscribe</code>
+                <p className="text-xs text-amber-300/60 mt-3">Instant upgrade!</p>
+              </div>
+              <div className="p-6 bg-slate-800/50 rounded-xl border border-amber-800/20 text-center">
+                <div className="text-5xl mb-4">👑</div>
+                <h4 className="font-bold text-xl mb-3 text-amber-100 font-serif">Tier 5</h4>
+                <p className="text-sm text-amber-200/80 mb-4">Join Discord & apply</p>
+                <a 
+                  href={DISCORD_SERVER} 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-amber-400 hover:text-amber-300 text-sm font-semibold underline"
+                >
+                  discord.gg/n3tMMVS3YR →
+                </a>
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Generate Button */}
-        {selectedGame && !generated && (
-          <div className="text-center">
-            <button
-              onClick={generateGame}
-              disabled={generating}
-              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg rounded-lg hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-2xl flex items-center gap-3 mx-auto"
-            >
-              {generating ? (
-                <>
-                  <Settings className="w-6 h-6 animate-spin" />
-                  Generating Complete Game...
-                </>
-              ) : (
-                <>
-                  <Play className="w-6 h-6" />
-                  Generate Full Game
-                </>
-              )}
-            </button>
           </div>
-        )}
 
-        {/* Download Section */}
-        {generated && (
-          <div className="bg-slate-800 rounded-lg p-8 text-center">
-            <div className="mb-6">
-              <div className="text-6xl mb-4">✅</div>
-              <h2 className="text-3xl font-bold text-white mb-2">Game Generated!</h2>
-              <p className="text-gray-300">
-                Complete, production-ready Roblox game with all systems implemented
+          <div className="mt-8 text-center space-y-3 text-amber-300/70">
+            <p>💎 All subscriptions managed through the bot</p>
+            <p>🎁 Tier 5 trial periods: 1, 3, 6 months, or 1 year</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Tribute */}
+      <section className="py-24 px-6 bg-gradient-to-b from-amber-950/30 via-slate-900 to-slate-950 border-t border-amber-900/30">
+        <div className="max-w-5xl mx-auto text-center">
+          <div className="flex items-center justify-center gap-6 mb-8">
+            <Feather className="w-16 h-16 text-amber-400 animate-pulse" />
+            <div className="text-8xl">🎭</div>
+            <Feather className="w-16 h-16 text-amber-400 animate-pulse" />
+          </div>
+          <h2 className="text-6xl font-bold mb-8 text-amber-100 font-serif">In Loving Memory</h2>
+          <div className="text-4xl text-amber-300 mb-6 italic font-light font-serif">Robin Williams</div>
+          <div className="text-xl text-amber-400/80 mb-12 font-serif">July 21, 1951 - August 11, 2014</div>
+          
+          <div className="mb-12 p-12 bg-slate-900/80 backdrop-blur-lg border-2 border-amber-700/50 rounded-3xl shadow-2xl">
+            <BookOpen className="w-20 h-20 text-amber-400 mx-auto mb-8" />
+            <p className="text-3xl text-amber-100 mb-8 leading-relaxed font-serif italic">
+              "We don't read and write poetry because it's cute.<br />
+              We read and write poetry because we are members of the human race.<br />
+              And the human race is filled with passion."
+            </p>
+            <div className="h-1 w-40 bg-amber-700 mx-auto my-8"></div>
+            <p className="text-2xl text-amber-200 mb-6 font-serif italic">
+              "Medicine, law, business, engineering, these are noble pursuits and necessary to sustain life.<br />
+              But poetry, beauty, romance, love, these are what we stay alive for."
+            </p>
+            <p className="text-xl text-amber-400 font-semibold font-serif mt-8">
+              - John Keating, Dead Poets Society
+            </p>
+          </div>
+
+          <p className="text-xl text-amber-200/90 mb-12 leading-relaxed font-serif max-w-3xl mx-auto">
+            Robin Williams taught us that teaching isn't about facts - it's about inspiration.<br />
+            That fixing things isn't just technical - it's personal.<br />
+            That the best helpers are the ones who make you believe in yourself.
+          </p>
+
+          <div className="mb-12 p-8 bg-gradient-to-r from-amber-950/60 to-slate-900/80 rounded-2xl border border-amber-800/40">
+            <p className="text-lg text-amber-200 leading-relaxed italic font-serif">
+              When your code breaks at 3 AM and you want to give up,<br />
+              Robin will stand on that metaphorical desk,<br />
+              look at your problem from a different angle,<br />
+              and remind you:<br />
+              <span className="text-amber-300 font-semibold text-2xl not-italic">"Carpe diem. Make your code extraordinary." ✨</span>
+            </p>
+          </div>
+
+          <a
+            href={BOT_INVITE}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 px-12 py-6 bg-gradient-to-r from-amber-700 via-orange-800 to-red-900 rounded-xl text-2xl font-bold hover:shadow-2xl hover:shadow-amber-900/50 transition-all transform hover:scale-105 text-amber-50 border-2 border-amber-600/50"
+          >
+            <BookOpen className="w-8 h-8" />
+            O Captain! My Captain!
+          </a>
+
+          <p className="mt-12 text-amber-500/70 italic font-serif">
+            "You're only given a little spark of madness. You mustn't lose it."
+          </p>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-16 px-6 border-t border-amber-900/30 bg-slate-950">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-amber-700 to-orange-800 rounded-lg flex items-center justify-center shadow-lg shadow-amber-900/50">
+                  <BookOpen className="w-7 h-7 text-amber-100" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-amber-100 font-serif">Robin Williams<br />Repair Bot</h3>
+                  <p className="text-xs text-amber-400/70 italic">by Kurrasch Systems</p>
+                </div>
+              </div>
+              <p className="text-amber-200/70 text-sm leading-relaxed mb-4 font-serif">
+                Script repair with the wisdom of a teacher and the warmth of a friend.
+              </p>
+              <p className="text-xs text-amber-400/50 italic font-serif">
+                Powered by Robin AI Mini AI<br />
+                "Seize the day" ✨
               </p>
             </div>
-
-            <button
-              onClick={downloadGame}
-              className="px-8 py-4 bg-green-600 text-white font-bold text-lg rounded-lg hover:bg-green-700 transition-all shadow-lg hover:shadow-2xl flex items-center gap-3 mx-auto mb-6"
-            >
-              <Download className="w-6 h-6" />
-              Download Complete Game (.lua)
-            </button>
-
-            <div className="grid md:grid-cols-2 gap-4 text-left text-sm">
-              <div className="bg-slate-900 p-4 rounded">
-                <h3 className="font-bold text-white mb-2">✨ Included Systems:</h3>
-                <ul className="text-gray-300 space-y-1">
-                  <li>• Server-authoritative gameplay</li>
-                  <li>• DataStore progression & saves</li>
-                  <li>• Anti-exploit validation</li>
-                  <li>• Cross-platform input (PC/Mobile/Console)</li>
-                  <li>• Complete UI/HUD systems</li>
-                  <li>• Weapon framework (if applicable)</li>
-                  <li>• AI pathfinding & behavior</li>
-                  <li>• Leaderboards & stats</li>
-                </ul>
-              </div>
-
-              <div className="bg-slate-900 p-4 rounded">
-                <h3 className="font-bold text-white mb-2">📦 File Structure:</h3>
-                <ul className="text-gray-300 space-y-1 font-mono text-xs">
-                  <li>ServerScriptService/</li>
-                  <li className="ml-4">├── GameCore.lua</li>
-                  <li className="ml-4">├── Systems modules</li>
-                  <li>ReplicatedStorage/</li>
-                  <li className="ml-4">├── Configs</li>
-                  <li className="ml-4">├── RemoteEvents</li>
-                  <li>StarterPlayer/</li>
-                  <li className="ml-4">├── ClientController.lua</li>
-                  <li className="ml-4">├── UI Manager</li>
-                  <li>+ Asset Manifest & README</li>
-                </ul>
-              </div>
+            
+            <div>
+              <h4 className="font-bold mb-6 text-lg text-amber-100 font-serif">The Family</h4>
+              <ul className="space-y-3 text-amber-200/70 text-sm">
+                <li className="flex items-center gap-2">
+                  <span className="text-green-400">●</span> Robin AI (Active)
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-yellow-400">●</span> Melanie AI (Updating)
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-yellow-400">●</span> Penny AI (Almost Ready)
+                </li>
+                <li className="pt-2 text-xs text-amber-400/50 italic">Melanie & Penny are twins</li>
+              </ul>
             </div>
-
-            <div className="mt-6 p-4 bg-yellow-900/30 border border-yellow-600/50 rounded-lg">
-              <p className="text-yellow-200 text-sm">
-                <strong>⚠️ Next Steps:</strong> Import into Roblox Studio, replace placeholder assets with royalty-free alternatives from the manifest, customize theming/branding, and configure GamePasses for DLC content.
-              </p>
+            
+            <div>
+              <h4 className="font-bold mb-6 text-lg text-amber-100 font-serif">Support</h4>
+              <ul className="space-y-3 text-amber-200/70 text-sm">
+                <li>
+                  <a href={DISCORD_SERVER} target="_blank" rel="noopener noreferrer" className="hover:text-amber-100 transition">
+                    Discord Community
+                  </a>
+                </li>
+                <li>
+                  <a href="https://docs.kurraschs.systems" target="_blank" rel="noopener noreferrer" className="hover:text-amber-100 transition">
+                    Documentation
+                  </a>
+                </li>
+                <li>
+                  <a href={DISCORD_SERVER} target="_blank" rel="noopener noreferrer" className="hover:text-amber-100 transition">
+                    Submit Appeal
+                  </a>
+                </li>
+                <li>
+                  <a href={DISCORD_SERVER} target="_blank" rel="noopener noreferrer" className="hover:text-amber-100 transition">
+                    Contact Owner
+                  </a>
+                </li>
+                <li>
+                  <a href={BOT_INVITE} target="_blank" rel="noopener noreferrer" className="hover:text-amber-100 transition text-amber-400 font-semibold">
+                    Invite Robin
+                  </a>
+                </li>
+              </ul>
             </div>
-
-            <button
-              onClick={() => {
-                setGenerated(false);
-                setSelectedGame('');
-              }}
-              className="mt-6 px-6 py-2 bg-slate-700 text-white rounded hover:bg-slate-600 transition-all"
-            >
-              Generate Another Game
-            </button>
+            
+            <div>
+              <h4 className="font-bold mb-6 text-lg text-amber-100 font-serif">Legal</h4>
+              <ul className="space-y-3 text-amber-200/70 text-sm">
+                <li>
+                  <a href={DISCORD_SERVER} target="_blank" rel="noopener noreferrer" className="hover:text-amber-100 transition">
+                    Terms of Service
+                  </a>
+                </li>
+                <li>
+                  <a href={DISCORD_SERVER} target="_blank" rel="noopener noreferrer" className="hover:text-amber-100 transition">
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a href={DISCORD_SERVER} target="_blank" rel="noopener noreferrer" className="hover:text-amber-100 transition">
+                    Refund Policy
+                  </a>
+                </li>
+                <li>
+                  <a href={DISCORD_SERVER} target="_blank" rel="noopener noreferrer" className="hover:text-amber-100 transition">
+                    IP Protection
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
-        )}
-
-        {/* Footer Info */}
-        <div className="mt-12 text-center text-gray-400 text-sm">
-          <p className="mb-2">
-            <strong>GitHub Ready:</strong> Minimal file structure, clean modular code, professional comments
-          </p>
-          <p className="mb-2">
-            <strong>Asset Sources:</strong> Royalty-free links included in manifest (Sketchfab, Freesound, Poly Haven)
-          </p>
-          <p>
-            <strong>Legal:</strong> All code is original. Replace any placeholder assets before publishing.
-          </p>
+          
+          <div className="pt-8 border-t border-amber-900/30 text-center">
+            <p className="text-amber-300/60 text-sm mb-2">&copy; 2025 Kurrasch Systems Studio. All rights reserved.</p>
+            <p className="text-amber-400/70 text-sm italic font-serif mb-4">
+              "Carpe diem. Seize the day, boys. Make your lives extraordinary."
+            </p>
+            <p className="text-amber-500/50 text-xs mt-6 italic font-serif">
+              In loving memory of Robin Williams (1951-2014)<br />
+              Teacher. Actor. Friend. Legend.
+            </p>
+            <p className="text-amber-400 text-sm font-semibold mt-4 font-serif">
+              His spark of madness lives on. ✨
+            </p>
+            <div className="flex justify-center gap-4 mt-6 text-4xl">
+              📚 🎭 🪶
+            </div>
+          </div>
         </div>
-      </div>
+      </footer>
     </div>
   );
 };
 
-export default RobloxGameGenerator;
+export default RobinAILanding;
